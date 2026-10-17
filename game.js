@@ -36,7 +36,7 @@ class Level1 extends Phaser.Scene {
 
 class Level2 extends Phaser.Scene {
     constructor() {
-        super('Level2');
+        super('level2');
     }
 
     preload() {
@@ -89,8 +89,18 @@ class Victory extends Phaser.Scene {
 }
 
 const game = new Phaser.Game({
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: {
+                x: 0,
+                y: 0
+            },
+            debug: true
+        }
+    },
     scale: {
-        mode: Phaser.scale.FIT,
+        mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
         width: 1280,
         height: 720,
