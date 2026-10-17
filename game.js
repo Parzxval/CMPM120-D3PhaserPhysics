@@ -1,3 +1,11 @@
+const ROOM = {
+    width: 400,
+    height: 300,
+    depth: 1000,
+    focalLength: 500,
+    eyeHeight: 0
+};
+
 class Menu extends Phaser.Scene {
     constructor() {
         super('menu');
@@ -26,7 +34,7 @@ class Level1 extends Phaser.Scene {
     }
 
     create() {
-
+        this.add.text(100, 100, 'Hi');
     }
 
     update() {
@@ -105,7 +113,7 @@ const game = new Phaser.Game({
         width: 1280,
         height: 720,
     },
-    backgroundColor: '#90b38d',
+    backgroundColor: '#e399f8',
     scene: [Level1],
     title: '2.5D Shooter Game'
 });
