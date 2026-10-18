@@ -174,6 +174,12 @@ class Base extends Phaser.Scene {
         this.drawPlane(this.graphics, 0xa8479a, this.rightWallCoords);
     }
 
+    /**
+     * drawRoom helper function to color in and draw individual planes
+     * @param {graphics} graphics graphics object
+     * @param {color} color color code
+     * @param {Array} ptsList list of points
+     */
     drawPlane(graphics, color, ptsList) {
         graphics.fillStyle(color);
         graphics.fillPoints(ptsList, true);
