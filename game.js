@@ -69,7 +69,12 @@ class Base extends Phaser.Scene {
 
     }
 
+    /**
+     * Calculates coordinate points of walls, ceiling, floor, and uses drawPlane() to display a 3d room
+     */
     drawRoom() {
+        this.graphics.clear();
+
         //Create and store 2d points of back wall
         this.backWallCoords = [];
         this.backWallCoords.push(project(0 - ROOM.width / 2, ROOM.height / 2, ROOM.depth, this.camX)); //top left
