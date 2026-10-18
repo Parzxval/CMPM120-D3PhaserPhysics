@@ -58,6 +58,22 @@ class Level1 extends Phaser.Scene {
 
     create() {
         this.add.text(100, 100, 'Hi');
+
+        this.camX = 0;
+
+        this.graphics = this.add.graphics().fillStyle(0xffffff);
+
+        //Create and store 2d points of back wall
+        this.backWall = [];
+        this.backWall.push(project(0 - ROOM.width / 2, ROOM.height / 2, ROOM.depth, this.camX));
+        this.backWall.push(project(ROOM.width / 2, ROOM.height / 2, ROOM.depth, this.camX));
+        this.backWall.push(project(0 - ROOM.width / 2, 0 - ROOM.height / 2, ROOM.depth, this.camX));
+        this.backWall.push(project(ROOM.width / 2, 0 - ROOM.height / 2, ROOM.depth, this.camX));
+
+        //draw back wall
+        for (let i = 0; i < 4; i++) {
+                this.graphics.fillCircle(this.backWall[i].x, this.backWall[i].y, 1);
+        }
     }
 
     update() {
