@@ -6,6 +6,29 @@ const ROOM = {
     eyeHeight: 0
 };
 
+const CENTER = {x: 640, y: 360};
+
+/**
+ * Turns a 3d world point into a 2d screen point
+ * @param {number} worldX world x value
+ * @param {number} worldY world y value
+ * @param {number} worldZ world z value
+ * @param {number} camX camera's x value
+ */
+function project(worldX, worldY, worldZ, camX) {
+    if (worldZ <= 0) {
+        return null;
+    }
+
+    //Calculates how much an item shrinks at a certain distance
+    let screenScale = ROOM.focalLength / worldZ;
+
+    let screenX = CENTER.x + (worldX - camX) * screenScale;
+    let screenY = CENTER.y - (worldY - ROOM.eyeHeight) * screenScale;
+
+    return {x: screenX, y: screenY, scale: screenScale}
+}
+
 class Menu extends Phaser.Scene {
     constructor() {
         super('menu');
