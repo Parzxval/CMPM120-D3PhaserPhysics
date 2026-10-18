@@ -48,9 +48,9 @@ class Menu extends Phaser.Scene {
     }
 }
 
-class Level1 extends Phaser.Scene {
-    constructor() {
-        super('level1');
+class Base extends Phaser.Scene {
+    constructor(key) {
+        super(key);
     }
 
     preload() {
@@ -58,10 +58,10 @@ class Level1 extends Phaser.Scene {
     }
 
     create() {
-        this.add.text(100, 100, 'Hi');
+        this.graphics = this.add.graphics();
 
         this.camX = 0;
-
+        
         //Create and store 2d points of back wall
         this.backWallCoords = [];
         this.backWallCoords.push(project(0 - ROOM.width / 2, ROOM.height / 2, ROOM.depth, this.camX)); //top left
@@ -77,14 +77,63 @@ class Level1 extends Phaser.Scene {
         this.floorCoords.push(project(0 - ROOM.width / 2, 0 - ROOM.height / 2, ROOM.nearZ, this.camX)); // bottom left
 
         //draw floor
-        this.graphics.fillStyle(0xcc49f0);
-        this.floorPts = this.graphics.fillPoints(this.floorCoords, true);
+        this.drawPlane(this.graphics, 0x7a2f6e, this.floorCoords);
 
         //draw back wall
-        this.graphics.fillStyle(0xffffff);
-        for (let i = 0; i < 4; i++) {
-                this.backWallPts = this.graphics.fillCircle(this.backWallCoords[i].x, this.backWallCoords[i].y, 1);
-        }
+       this.drawPlane(this.graphics, 0xf6bff0, this.backWallCoords);
+
+        //Create and store 2d points of ceiling
+        this.ceilingCoords = [];
+        this.ceilingCoords.push(this.backWallCoords[0]); // bottom left = top left of back wall
+        this.ceilingCoords.push(this.backWallCoords[1]); // bottom right = top right of back wall
+        this.ceilingCoords.push(project(ROOM.width / 2, ROOM.height / 2, ROOM.nearZ, this.camX)); // top right 
+        this.ceilingCoords.push(project(0 - ROOM.width / 2, ROOM.height / 2, ROOM.nearZ, this.camX)); // top left
+
+        //draw ceiling
+        this.drawPlane(this.graphics, 0xd98acb, this.ceilingCoords);
+
+        //Create and store 2d points of left wall
+        this.leftWallCoords = [];
+        this.leftWallCoords.push(this.backWallCoords[0]); // top right = top left of back wall
+        this.leftWallCoords.push(this.backWallCoords[3]); // bottom right = bottom left of back wall
+        this.leftWallCoords.push(project(0 - ROOM.width / 2, 0 - ROOM.height / 2, ROOM.nearZ, this.camX)); // bottom left
+        this.leftWallCoords.push(project(0 - ROOM.width/ 2, ROOM.height / 2, ROOM.nearZ, this.camX)); // top left
+
+        //draw left wall
+        this.drawPlane(this.graphics, 0xb553a7, this.leftWallCoords);
+
+        //Create and store 2d points of right wall
+        this.rightWallCoords = [];
+        this.rightWallCoords.push(this.backWallCoords[1]); // top left = top right of back wall
+        this.rightWallCoords.push(this.backWallCoords[2]); // bottom left = bottom right of back wall
+        this.rightWallCoords.push(project(ROOM.width / 2, 0 - ROOM.height / 2, ROOM.nearZ, this.camX)); // bottom right
+        this.rightWallCoords.push(project(ROOM.width / 2, ROOM.height / 2, ROOM.nearZ, this.camX)); // top right
+
+        //draw right wall
+        this.drawPlane(this.graphics, 0xa8479a, this.rightWallCoords);
+    }
+
+    update() {
+
+    }
+
+    drawPlane(graphics, color, ptsList) {
+        graphics.fillStyle(color);
+        graphics.fillPoints(ptsList, true);
+    }
+}
+
+class Level1 extends Base {
+    constructor() {
+        super('level1');
+    }
+
+    preload() {
+
+    }
+
+    create() {
+        super.create();
     }
 
     update() {
@@ -92,7 +141,7 @@ class Level1 extends Phaser.Scene {
     }
 }
 
-class Level2 extends Phaser.Scene {
+class Level2 extends Base {
     constructor() {
         super('level2');
     }
@@ -110,7 +159,7 @@ class Level2 extends Phaser.Scene {
     }
 }
 
-class Level3 extends Phaser.Scene {
+class Level3 extends Base {
     constructor() {
         super('level3');
     }
