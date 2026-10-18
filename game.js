@@ -35,7 +35,7 @@ function project(worldX, worldY, worldZ, camX) {
 
 /**
  * Determines x, y, and z directions where crosshair is aiming
- * @param crosshair crosshair
+ * @param {graphics} crosshair
  */
 function aim(crosshair) {
     let dirX = (crosshair.x - CENTER.x) / ROOM.focalLength;
@@ -44,6 +44,17 @@ function aim(crosshair) {
     let length = Math.sqrt(Math.pow(dirX, 2) + Math.pow(dirY, 2) + Math.pow(dirZ, 2));
 
     return {x: dirX / length, y: dirY / length, z: dirZ / length};
+}
+
+/**
+ * Adds velocity * time to each of a ball's x, y, and z values
+ * @param {ball} ball object
+ * @param {number} time in seconds
+ */
+function step(ball, time) {
+    ball.x += ball.velocity.x * time;
+    ball.y += ball.velocity.y * time;
+    ball.z += ball.velocity.z * time;
 }
 
 class Menu extends Phaser.Scene {
@@ -119,6 +130,13 @@ class Base extends Phaser.Scene {
 
         this.crosshair.x = this.input.activePointer.x;
         this.crosshair.y = this.input.activePointer.y;
+
+        if (this.ball) {
+            step(this.ball, seconds);
+            if (this.ball.z >= (ROOM.depth - ROOM.ballRadius)) {
+                this.ball = null;
+            }
+        }
     }
 
     /**
