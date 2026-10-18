@@ -60,8 +60,12 @@ class Base extends Phaser.Scene {
 
     create() {
         this.graphics = this.add.graphics();
+        
+        this.drawCrosshair();
+
         this.cursors = this.input.keyboard.createCursorKeys();
         this.adKeys = this.input.keyboard.addKeys('A,D');
+
 
         this.camX = 0;
 
@@ -81,6 +85,9 @@ class Base extends Phaser.Scene {
         this.camX = Phaser.Math.Clamp(this.camX, -160, 160); //Allowed movement range
 
         this.drawRoom(); //redraws room with new camX value
+
+        this.crosshair.x = this.input.activePointer.x;
+        this.crosshair.y = this.input.activePointer.y;
     }
 
     /**
@@ -143,6 +150,18 @@ class Base extends Phaser.Scene {
     drawPlane(graphics, color, ptsList) {
         graphics.fillStyle(color);
         graphics.fillPoints(ptsList, true);
+    }
+
+    /**
+     * removes default cursor and draws a generic fps crosshair
+     */
+    drawCrosshair() {
+        this.input.setDefaultCursor('none');
+        this.crosshair = this.add.graphics().setDepth(10);
+
+        this.crosshair.lineStyle(3, 0x00ff00, 0.7);
+        this.crosshair.lineBetween(-10, 0, 10, 0);
+        this.crosshair.lineBetween(0, -10, 0, 10)
     }
 }
 
