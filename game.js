@@ -3,7 +3,8 @@ const ROOM = {
     height: 300,
     depth: 1000,
     focalLength: 500,
-    eyeHeight: 0
+    eyeHeight: 0,
+    nearZ: 0.1 //z value of floor points closest to player POV
 };
 
 const CENTER = {x: 640, y: 360};
@@ -61,18 +62,28 @@ class Level1 extends Phaser.Scene {
 
         this.camX = 0;
 
-        this.graphics = this.add.graphics().fillStyle(0xffffff);
-
         //Create and store 2d points of back wall
-        this.backWall = [];
-        this.backWall.push(project(0 - ROOM.width / 2, ROOM.height / 2, ROOM.depth, this.camX));
-        this.backWall.push(project(ROOM.width / 2, ROOM.height / 2, ROOM.depth, this.camX));
-        this.backWall.push(project(0 - ROOM.width / 2, 0 - ROOM.height / 2, ROOM.depth, this.camX));
-        this.backWall.push(project(ROOM.width / 2, 0 - ROOM.height / 2, ROOM.depth, this.camX));
+        this.backWallCoords = [];
+        this.backWallCoords.push(project(0 - ROOM.width / 2, ROOM.height / 2, ROOM.depth, this.camX)); //top left
+        this.backWallCoords.push(project(ROOM.width / 2, ROOM.height / 2, ROOM.depth, this.camX)); // top right
+        this.backWallCoords.push(project(ROOM.width / 2, 0 - ROOM.height / 2, ROOM.depth, this.camX)); //bottom right
+        this.backWallCoords.push(project(0 - ROOM.width / 2, 0 - ROOM.height / 2, ROOM.depth, this.camX)); // bottom left
+
+        //Create and store 2d points of floor
+        this.floorCoords = [];
+        this.floorCoords.push(this.backWallCoords[3]); // top left = bottom left of back wall
+        this.floorCoords.push(this.backWallCoords[2]); // top right = bottom right of back wall
+        this.floorCoords.push(project(ROOM.width / 2, 0 - ROOM.height / 2, ROOM.nearZ, this.camX)); // bottom right
+        this.floorCoords.push(project(0 - ROOM.width / 2, 0 - ROOM.height / 2, ROOM.nearZ, this.camX)); // bottom left
+
+        //draw floor
+        this.graphics.fillStyle(0xcc49f0);
+        this.floorPts = this.graphics.fillPoints(this.floorCoords, true);
 
         //draw back wall
+        this.graphics.fillStyle(0xffffff);
         for (let i = 0; i < 4; i++) {
-                this.graphics.fillCircle(this.backWall[i].x, this.backWall[i].y, 1);
+                this.backWallPts = this.graphics.fillCircle(this.backWallCoords[i].x, this.backWallCoords[i].y, 1);
         }
     }
 
