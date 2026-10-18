@@ -14,21 +14,21 @@ const CENTER = {x: 640, y: 360};
 
 /**
  * Turns a 3d world point into a 2d screen point
- * @param {number} worldX world x value
- * @param {number} worldY world y value
- * @param {number} worldZ world z value
+ * @param {number} x coordinate
+ * @param {number} y coordinate
+ * @param {number} z coordinate
  * @param {number} camX camera's x value
  */
-function project(worldX, worldY, worldZ, camX) {
-    if (worldZ <= 0) {
+function project(x, y, z, camX) {
+    if (z <= 0) {
         return null;
     }
 
     //Calculates how much an item shrinks at a certain distance
-    let screenScale = ROOM.focalLength / worldZ;
+    let screenScale = ROOM.focalLength / z;
 
-    let screenX = CENTER.x + (worldX - camX) * screenScale;
-    let screenY = CENTER.y - (worldY - ROOM.eyeHeight) * screenScale;
+    let screenX = CENTER.x + (x - camX) * screenScale;
+    let screenY = CENTER.y - (y - ROOM.eyeHeight) * screenScale;
 
     return {x: screenX, y: screenY, scale: screenScale}
 }
@@ -96,6 +96,7 @@ class Base extends Phaser.Scene {
         this.camX = 0;
 
         this.drawRoom();
+        this.ballGraphics = this.add.graphics();
 
         this.input.on('pointerdown', (pointer) => {
             if (!this.ball) {
@@ -137,6 +138,13 @@ class Base extends Phaser.Scene {
                 this.ball = null;
             }
         }
+        this.ballGraphics.clear();
+        if (this.ball) {
+            let ballPos = project(this.ball.x, this.ball.y, this.ball.z, this.camX);
+            this.ballGraphics.fillStyle(0x008080);
+            this.ballGraphics.fillCircle(ballPos.x, ballPos.y, ROOM.ballRadius * ballPos.scale);
+        }
+
     }
 
     /**
