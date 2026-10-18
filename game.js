@@ -1,10 +1,11 @@
 const ROOM = {
     width: 400,
     height: 300,
-    depth: 1000,
+    depth: 950,
     focalLength: 500,
     eyeHeight: 0,
-    nearZ: 0.1 //z value of floor points closest to player POV
+    nearZ: 0.1, //z value of floor points closest to player POV
+    movementSpeed: 200,
 };
 
 const CENTER = {x: 640, y: 360};
@@ -59,14 +60,27 @@ class Base extends Phaser.Scene {
 
     create() {
         this.graphics = this.add.graphics();
+        this.cursors = this.input.keyboard.createCursorKeys();
+        this.adKeys = this.input.keyboard.addKeys('A,D');
 
         this.camX = 0;
 
         this.drawRoom();
     }
 
-    update() {
+    update(time, delta) {
+        let seconds = delta / 1000;
 
+        if (this.cursors.left.isDown || this.adKeys.A.isDown) {
+            this.camX -= ROOM.movementSpeed * seconds;
+        }
+        if (this.cursors.right.isDown || this.adKeys.D.isDown) {
+            this.camX += ROOM.movementSpeed * seconds;
+        }
+
+        this.camX = Phaser.Math.Clamp(this.camX, -160, 160); //Allowed movement range
+
+        this.drawRoom(); //redraws room with new camX value
     }
 
     /**
@@ -143,10 +157,6 @@ class Level1 extends Base {
 
     create() {
         super.create();
-    }
-
-    update() {
-
     }
 }
 
