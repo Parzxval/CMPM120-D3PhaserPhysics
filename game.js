@@ -61,7 +61,15 @@ class Base extends Phaser.Scene {
         this.graphics = this.add.graphics();
 
         this.camX = 0;
-        
+
+        this.drawRoom();
+    }
+
+    update() {
+
+    }
+
+    drawRoom() {
         //Create and store 2d points of back wall
         this.backWallCoords = [];
         this.backWallCoords.push(project(0 - ROOM.width / 2, ROOM.height / 2, ROOM.depth, this.camX)); //top left
@@ -111,10 +119,6 @@ class Base extends Phaser.Scene {
 
         //draw right wall
         this.drawPlane(this.graphics, 0xa8479a, this.rightWallCoords);
-    }
-
-    update() {
-
     }
 
     drawPlane(graphics, color, ptsList) {
