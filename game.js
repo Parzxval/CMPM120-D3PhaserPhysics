@@ -6,6 +6,8 @@ const ROOM = {
     eyeHeight: 0,
     nearZ: 0.1, //z value of floor points closest to player POV
     movementSpeed: 200,
+    ballRadius: 10,
+    minPower: 800,
 };
 
 const CENTER = {x: 640, y: 360};
@@ -29,6 +31,15 @@ function project(worldX, worldY, worldZ, camX) {
     let screenY = CENTER.y - (worldY - ROOM.eyeHeight) * screenScale;
 
     return {x: screenX, y: screenY, scale: screenScale}
+}
+
+function aim(crosshair) {
+    let dirX = (crosshair.x - CENTER.x) / ROOM.focalLength;
+    let dirY = 0 - (crosshair.y - CENTER.y) / ROOM.focalLength;
+    let dirZ = 1;
+    let length = Math.sqrt(Math.pow(dirX, 2) + Math.pow(dirY, 2) + Math.pow(dirZ, 2));
+
+    return {x: dirX / length, y: dirY / length, z: dirZ / length};
 }
 
 class Menu extends Phaser.Scene {
@@ -70,6 +81,22 @@ class Base extends Phaser.Scene {
         this.camX = 0;
 
         this.drawRoom();
+
+        this.input.on('pointerdown', (pointer) => {
+            if (!this.ball) {
+                let dir = aim(this.crosshair);
+                this.ball = {
+                    x: this.camX,
+                    y: ROOM.eyeHeight,
+                    z: 30,
+                    velocity: {
+                        x: dir.x * ROOM.minPower,
+                        y: dir.y * ROOM.minPower,
+                        z: dir.z * ROOM.minPower
+                    }
+                }
+            }
+        })
     }
 
     update(time, delta) {
