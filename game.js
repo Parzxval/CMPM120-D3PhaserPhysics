@@ -33,6 +33,10 @@ function project(worldX, worldY, worldZ, camX) {
     return {x: screenX, y: screenY, scale: screenScale}
 }
 
+/**
+ * Determines x, y, and z directions where crosshair is aiming
+ * @param crosshair crosshair
+ */
 function aim(crosshair) {
     let dirX = (crosshair.x - CENTER.x) / ROOM.focalLength;
     let dirY = 0 - (crosshair.y - CENTER.y) / ROOM.focalLength;
